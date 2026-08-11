@@ -758,9 +758,9 @@ void DisplayUI::drawMenu() {
     int    tmpLen;
     int    row = (currentMenu->selected / 5) * 5;
 
-    // correct selected if it's off
-    if (currentMenu->selected < 0) currentMenu->selected = 0;
-    else if (currentMenu->selected >= currentMenu->list->size()) currentMenu->selected = currentMenu->list->size() - 1;
+    // correct selected if it's off the end. selected is unsigned, so it can't
+    // be < 0; a decrement past 0 wraps high and is clamped here as well.
+    if (currentMenu->selected >= currentMenu->list->size()) currentMenu->selected = currentMenu->list->size() - 1;
 
     // draw menu entries
     for (int i = row; i < currentMenu->list->size() && i < row + 5; i++) {

@@ -26,14 +26,17 @@
 
 #else /* ifdef ENABLE_DEBUG */
 
-#define debug_init() 0
+// Statement-style macros expand to a no-op statement (not a bare `0;`,
+// which triggers -Wunused-value at every call site when debugging is off).
+#define debug_init() do {} while (0)
 
-#define debug(...) 0
-#define debugln(...) 0
-#define debugf(...) 0
-#define debugF(...) 0
-#define debuglnF(...) 0
+#define debug(...) do {} while (0)
+#define debugln(...) do {} while (0)
+#define debugf(...) do {} while (0)
+#define debugF(...) do {} while (0)
+#define debuglnF(...) do {} while (0)
 
+// These are used in value contexts, so they must still evaluate to a value.
 #define debug_available() 0
 #define debug_read() 0
 #define debug_peek() 0

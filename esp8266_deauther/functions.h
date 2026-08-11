@@ -27,7 +27,8 @@ String escape(String str) {
 }
 
 bool ascii(char c) {
-    return c >= 0 && c <= 127;
+    // Treat c as a raw byte so the test works whether char is signed or not.
+    return (uint8_t)c <= 127;
 }
 
 bool printableAscii(char c) {
