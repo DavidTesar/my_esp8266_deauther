@@ -795,7 +795,12 @@ void CLI::runCommand(String input) {
         else if (eqls(str, S_JSON_WEBINTERFACE)) newSettings.web.enabled = boolVal;
         else if (eqls(str, S_JSON_CAPTIVEPORTAL)) newSettings.web.captive_portal = boolVal;
         else if (eqls(str, S_JSON_WEB_SPIFFS)) newSettings.web.use_spiffs = boolVal;
-        else if (eqls(str, S_JSON_LANG)) strncpy(newSettings.web.lang, strVal.c_str(), 3);
+        else if (eqls(str, S_JSON_LANG)) {
+            // lang is char[3] (2-char code + terminator). strncpy(...,3) does not
+            // null-terminate a 3+ char input, which later over-reads in String(char*).
+            strncpy(newSettings.web.lang, strVal.c_str(), 3);
+            newSettings.web.lang[2] = '\0';
+        }
 
         // CLI
         else if (eqls(str, S_JSON_SERIALINTERFACE)) newSettings.cli.enabled = boolVal;
@@ -1063,8 +1068,13 @@ void CLI::runCommand(String input) {
     else if (eqlsCMD(0, CLI_SEND) && (list->size() == 6) && eqlsCMD(1, CLI_DEAUTH)) {
         uint8_t apMac[6];
         uint8_t stMac[6];
-        strToMac(list->get(2), apMac);
-        strToMac(list->get(3), stMac);
+
+        // don't transmit uninitialized stack bytes if a MAC fails to parse
+        if (!strToMac(list->get(2), apMac) || !strToMac(list->get(3), stMac)) {
+            prntln(" invalid MAC address");
+            return;
+        }
+
         uint8_t reason  = list->get(4).toInt();
         uint8_t channel = list->get(5).toInt();
         prnt(CLI_DEAUTHING);
@@ -1205,6 +1215,12 @@ void CLI::runCommand(String input) {
         if (list->size() >= 2) height = list->get(1).toInt();
 
         if (list->size() >= 3) width = list->get(2).toInt();
+
+        // width drives both an sprintf field width and raw writes into a 6-byte
+        // stack buffer below; clamp it so a large value can't overflow the stack
+        if (width < 1) width = 1;
+        else if (width > 4) width = 4;
+
         double scale = scan.getScaleFactor(height);
 
         prnt(String(DASH) + String(DASH) + String(DASH) + String(DASH) + String(VERTICALBAR)); // ----|

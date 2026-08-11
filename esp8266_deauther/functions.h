@@ -169,7 +169,7 @@ String replaceUtf8(String str, String r) {
 
 // for reading Strings from the PROGMEM
 String str(const char* ptr) {
-    char keyword[strlen_P(ptr)];
+    char keyword[strlen_P(ptr) + 1]; // +1 for the terminating '\0' strcpy_P writes
 
     strcpy_P(keyword, ptr);
     return String(keyword);
@@ -177,7 +177,7 @@ String str(const char* ptr) {
 
 // for converting keywords
 String keyword(const char* keywordPtr) {
-    char keyword[strlen_P(keywordPtr)];
+    char keyword[strlen_P(keywordPtr) + 1]; // +1 for the terminating '\0'
 
     strcpy_P(keyword, keywordPtr);
 
