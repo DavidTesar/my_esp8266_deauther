@@ -45,6 +45,10 @@ typedef struct attack_settings_t {
     bool     auto_cycle;
     uint16_t cycle_on;  // seconds sending
     uint16_t cycle_off; // seconds paused
+
+    // Random beacon (SSID) mode generation
+    uint8_t random_ssid_count; // how many random SSIDs to generate (1..SSID_LIST_SIZE)
+    uint8_t random_ssid_len;   // length of each random SSID (1..32)
 } attack_settings_t;
 
 // ====== WIFI ====== //

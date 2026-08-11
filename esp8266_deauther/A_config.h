@@ -439,6 +439,17 @@
   #define ATTACK_CYCLE_OFF 30
 #endif /* ifndef ATTACK_CYCLE_OFF */
 
+// Random beacon-mode generation: how many random SSIDs and how long each is.
+// Defaults preserve the original behaviour (fill the whole 60-entry list with
+// 32-character names).
+#ifndef RANDOM_SSID_COUNT
+  #define RANDOM_SSID_COUNT 60
+#endif /* ifndef RANDOM_SSID_COUNT */
+
+#ifndef RANDOM_SSID_LEN
+  #define RANDOM_SSID_LEN 32
+#endif /* ifndef RANDOM_SSID_LEN */
+
 // ===== SNIFFER ===== //
 #ifndef CH_TIME
   #define CH_TIME 200

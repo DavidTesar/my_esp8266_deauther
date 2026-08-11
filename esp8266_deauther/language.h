@@ -610,6 +610,8 @@ const char S_JSON_PROBESPERSSID[] PROGMEM = "probesPerSSID";
 const char S_JSON_AUTOCYCLE[] PROGMEM = "autocycle";
 const char S_JSON_CYCLEON[] PROGMEM = "cycleon";
 const char S_JSON_CYCLEOFF[] PROGMEM = "cycleoff";
+const char S_JSON_RANDOMCOUNT[] PROGMEM = "randomcount";
+const char S_JSON_RANDOMLENGTH[] PROGMEM = "randomlength";
 
 // WiFi
 const char S_JSON_CHANNEL[] PROGMEM = "channel";

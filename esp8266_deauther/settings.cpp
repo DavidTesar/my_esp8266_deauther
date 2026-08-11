@@ -12,7 +12,8 @@
 //   3416245 -> 3416246: led_settings_t gained `theme`
 //   3416246 -> 3416247: led_settings_t gained `brightness`
 //   3416247 -> 3416248: attack_settings_t gained auto_cycle/cycle_on/cycle_off
-#define MAGIC_NUM 3416248
+//   3416248 -> 3416249: attack_settings_t gained random_ssid_count/random_ssid_len
+#define MAGIC_NUM 3416249
 
 extern bool writeFile(String path, String& buf);
 extern void getRandomMac(uint8_t* mac);
@@ -76,6 +77,8 @@ namespace settings {
         JSON_FLAG(S_JSON_AUTOCYCLE, data.attack.auto_cycle);
         JSON_INT(S_JSON_CYCLEON, data.attack.cycle_on);
         JSON_INT(S_JSON_CYCLEOFF, data.attack.cycle_off);
+        JSON_INT(S_JSON_RANDOMCOUNT, data.attack.random_ssid_count);
+        JSON_INT(S_JSON_RANDOMLENGTH, data.attack.random_ssid_len);
 
         // WiFi
         JSON_INT(S_JSON_CHANNEL, data.wifi.channel);
@@ -166,6 +169,8 @@ namespace settings {
         data.attack.auto_cycle            = ATTACK_AUTO_CYCLE;
         data.attack.cycle_on              = ATTACK_CYCLE_ON;
         data.attack.cycle_off             = ATTACK_CYCLE_OFF;
+        data.attack.random_ssid_count     = RANDOM_SSID_COUNT;
+        data.attack.random_ssid_len       = RANDOM_SSID_LEN;
 
         data.wifi.channel = 1;
         getRandomMac(data.wifi.mac_st);

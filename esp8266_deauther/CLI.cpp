@@ -703,6 +703,8 @@ void CLI::runCommand(String input) {
         else if (eqls(str, S_JSON_AUTOCYCLE)) prntln(settings::getAttackSettings().auto_cycle);
         else if (eqls(str, S_JSON_CYCLEON)) prntln(settings::getAttackSettings().cycle_on);
         else if (eqls(str, S_JSON_CYCLEOFF)) prntln(settings::getAttackSettings().cycle_off);
+        else if (eqls(str, S_JSON_RANDOMCOUNT)) prntln(settings::getAttackSettings().random_ssid_count);
+        else if (eqls(str, S_JSON_RANDOMLENGTH)) prntln(settings::getAttackSettings().random_ssid_len);
 
         // WiFi
         else if (eqls(str, S_JSON_CHANNEL)) prntln(settings::getWifiSettings().channel);
@@ -771,6 +773,8 @@ void CLI::runCommand(String input) {
         else if (eqls(str, S_JSON_AUTOCYCLE)) newSettings.attack.auto_cycle = boolVal;
         else if (eqls(str, S_JSON_CYCLEON)) newSettings.attack.cycle_on = (uint16_t)unsignedVal;
         else if (eqls(str, S_JSON_CYCLEOFF)) newSettings.attack.cycle_off = (uint16_t)unsignedVal;
+        else if (eqls(str, S_JSON_RANDOMCOUNT)) newSettings.attack.random_ssid_count = (uint8_t)(unsignedVal > SSID_LIST_SIZE ? SSID_LIST_SIZE : unsignedVal);
+        else if (eqls(str, S_JSON_RANDOMLENGTH)) newSettings.attack.random_ssid_len = (uint8_t)(unsignedVal > 32 ? 32 : unsignedVal);
 
         // WiFi
         else if (eqls(str, S_JSON_CHANNEL)) newSettings.wifi.channel = unsignedVal;

@@ -106,15 +106,28 @@ void SSIDs::update() {
         if (currentTime - randomTime > randomInterval * 1000) {
             prntln(SS_RANDOM_INFO);
 
-            for (int i = 0; i < SSID_LIST_SIZE; i++) {
+            // clamp the configured count/length to the valid ranges
+            int count = settings::getAttackSettings().random_ssid_count;
+            int len   = settings::getAttackSettings().random_ssid_len;
+
+            if (count < 1) count = 1;
+            else if (count > SSID_LIST_SIZE) count = SSID_LIST_SIZE;
+
+            if (len < 1) len = 1;
+            else if (len > 32) len = 32;
+
+            // if the count shrank since last time, drop the surplus entries
+            while (list->size() > count) list->remove(list->size() - 1);
+
+            for (int i = 0; i < count; i++) {
                 SSID newSSID;
 
                 if (check(i)) newSSID = list->get(i);
 
                 newSSID.name = String();
-                newSSID.len  = 32;
+                newSSID.len  = len;
 
-                for (int i = 0; i < 32; i++) newSSID.name += char(random(32, 127));
+                for (int j = 0; j < len; j++) newSSID.name += char(random(32, 127));
 
                 newSSID.wpa2 = random(0, 2);
 
