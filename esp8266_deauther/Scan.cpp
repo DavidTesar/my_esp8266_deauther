@@ -14,6 +14,9 @@ void Scan::sniffer(uint8_t* buf, uint16_t len) {
 
     packets++;
 
+    // bucket the packet by the channel we're currently listening on
+    if ((wifi_channel >= 1) && (wifi_channel <= 14)) ch_packets[wifi_channel]++;
+
     if (len < 28) return;  // drop frames that are too short to have a valid MAC header
 
     if ((buf[12] == 0xc0) || (buf[12] == 0xa0)) {
@@ -70,6 +73,9 @@ void Scan::start(uint8_t mode, uint32_t time, uint8_t nextmode, uint32_t continu
     Scan::channelHop         = channelHop;
     Scan::scanMode           = mode;
     Scan::scan_continue_mode = nextmode;
+
+    // reset per-channel packet stats for the new run
+    for (uint8_t i = 0; i < 15; i++) Scan::ch_packets[i] = 0;
 
     if ((sniffTime > 0) && (sniffTime < 1000)) sniffTime = 1000;
 
@@ -450,4 +456,38 @@ uint32_t Scan::getMaxPacket() {
 
 uint32_t Scan::getPacketRate() {
     return list->get(list->size() - 1);
+}
+
+uint32_t Scan::getChannelPackets(uint8_t ch) {
+    if ((ch < 1) || (ch > 14)) return 0;
+    return ch_packets[ch];
+}
+
+uint32_t Scan::getMaxChannelPackets() {
+    uint32_t max = 0;
+
+    for (uint8_t ch = 1; ch <= 14; ch++) {
+        if (ch_packets[ch] > max) max = ch_packets[ch];
+    }
+    return max;
+}
+
+uint32_t Scan::getTotalPackets() {
+    uint32_t total = 0;
+
+    for (uint8_t ch = 1; ch <= 14; ch++) total += ch_packets[ch];
+    return total;
+}
+
+uint8_t Scan::getBusiestChannel() {
+    uint8_t  busiest = 1;
+    uint32_t max     = 0;
+
+    for (uint8_t ch = 1; ch <= 14; ch++) {
+        if (ch_packets[ch] > max) {
+            max     = ch_packets[ch];
+            busiest = ch;
+        }
+    }
+    return busiest;
 }

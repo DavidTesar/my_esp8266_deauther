@@ -66,6 +66,12 @@ class Scan {
         uint32_t getMaxPacket();
         uint32_t getPacketRate();
 
+        // Per-channel cumulative packet stats (since the current sniff started)
+        uint32_t getChannelPackets(uint8_t ch);
+        uint32_t getMaxChannelPackets();
+        uint32_t getTotalPackets();
+        uint8_t getBusiestChannel();
+
         uint16_t deauths = 0;
         uint16_t packets = 0;
 
@@ -86,6 +92,8 @@ class Scan {
 
         bool channelHop     = true;
         uint16_t tmpDeauths = 0;
+
+        uint32_t ch_packets[15] = { 0 }; // cumulative packets per channel (index 1-14)
 
         bool apWithChannel(uint8_t ch);
         int findAccesspoint(uint8_t* mac);

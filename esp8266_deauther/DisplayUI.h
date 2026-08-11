@@ -144,6 +144,8 @@ class DisplayUI {
         bool enabled = false;      // display enabled
         bool tempOff = false;
 
+        bool pktMonChannelView = false; // packet monitor: false = rate graph, true = per-channel bars
+
         // selected attack modes
         bool beaconSelected = false;
         bool deauthSelected = false;
@@ -180,6 +182,7 @@ class DisplayUI {
         void drawMenu();
         void drawLoadingScan();
         void drawPacketMonitor();
+        void drawChannelActivity();
         void drawIntro();
         void drawResetting();
         void clearMenu(Menu* menu);

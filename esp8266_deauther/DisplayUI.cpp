@@ -653,6 +653,9 @@ void DisplayUI::setupButtons() {
                 if (currentMenu->list->get(currentMenu->selected).hold) {
                     currentMenu->list->get(currentMenu->selected).hold();
                 }
+            } else if (mode == DISPLAY_MODE::PACKETMONITOR) {
+                // toggle between the rate graph and the per-channel activity view
+                pktMonChannelView = !pktMonChannelView;
             }
         }
     }, 800);
@@ -802,6 +805,12 @@ void DisplayUI::drawLoadingScan() {
 }
 
 void DisplayUI::drawPacketMonitor() {
+    // Button A (hold) toggles to the per-channel activity view.
+    if (pktMonChannelView) {
+        drawChannelActivity();
+        return;
+    }
+
     double scale = scan.getScaleFactor(sreenHeight - lineHeight - 2);
 
     String headline = leftRight(str(D_CH) + getChannel() + String(' ') + String('[') + String(scan.deauths) + String(']'), String(scan.getPacketRate()) + str(D_PKTS), maxLen);
@@ -826,6 +835,36 @@ void DisplayUI::drawPacketMonitor() {
             x++;
         }
         // Serial.println("---------");
+    }
+}
+
+void DisplayUI::drawChannelActivity() {
+    uint32_t maxCh = scan.getMaxChannelPackets();
+
+    // header: total packets + deauths on the left, busiest channel on the right
+    String header = leftRight(
+        String("P:") + String(scan.getTotalPackets()) + String(" D:") + String(scan.deauths),
+        String('>') + String(scan.getBusiestChannel()),
+        maxLen);
+    drawString(0, 0, header);
+
+    const int bottom = sreenHeight - 1;
+    const int top    = lineHeight + 1;
+    const int avail  = bottom - top;     // vertical space available for bars
+    const int slot   = screenWidth / 14; // horizontal px per channel
+    const int barW   = slot - 2;         // bar width, leaving a small gap
+
+    for (uint8_t ch = 1; ch <= 14; ch++) {
+        int x = (ch - 1) * slot;
+        int h = (maxCh > 0) ? (int)(scan.getChannelPackets(ch) * (uint32_t)avail / maxCh) : 0;
+
+        // draw the bar as a run of vertical lines
+        for (int col = 0; col < barW; col++) {
+            drawLine(x + col, bottom, x + col, bottom - h);
+        }
+
+        // cursor: full-height line marking the channel we're listening on now
+        if (ch == wifi_channel) drawLine(x + barW, top, x + barW, bottom);
     }
 }
 
