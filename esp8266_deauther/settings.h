@@ -77,8 +77,17 @@ typedef struct cli_settings_t {
 } cli_settings_t;
 
 // ===== LED ===== //
+typedef enum led_theme_t {
+    LED_THEME_DEFAULT = 0, // state colors: scan=blue, attack=red, idle=green
+    LED_THEME_RED     = 1, // solid red
+    LED_THEME_BLUE    = 2, // solid blue
+    LED_THEME_PURPLE  = 3, // solid purple
+    LED_THEME_PARTY   = 4  // animated light-blue <-> green
+} led_theme_t;
+
 typedef struct led_settings_t {
-    bool enabled;
+    bool        enabled;
+    led_theme_t theme;
 } led_settings_t;
 
 // ===== DISPLAY ===== //

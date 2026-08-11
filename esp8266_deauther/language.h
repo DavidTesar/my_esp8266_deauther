@@ -203,6 +203,7 @@ const char CLI_HELP_SEND_BEACON[] PROGMEM = "send beacon <mac> <ssid> <ch> [wpa2
 const char CLI_HELP_SEND_PROBE[] PROGMEM = "send probe <mac> <ssid> <ch>";
 const char CLI_HELP_LED_A[] PROGMEM = "led <r> <g> <b>";
 const char CLI_HELP_LED_B[] PROGMEM = "led <#rrggbb>";
+const char CLI_HELP_LED_C[] PROGMEM = "led <default/red/blue/purple/party>";
 const char CLI_HELP_DRAW[] PROGMEM = "draw";
 const char CLI_HELP_SCREEN_ON[] PROGMEM = "screen <on/off>";
 const char CLI_HELP_SCREEN_MODE[] PROGMEM = "screen mode <menu/packetmonitor/buttontest/loading>";
@@ -350,6 +351,14 @@ const char D_SELECT_ALL[] PROGMEM = "SELECT ALL";
 const char D_DESELECT_ALL[] PROGMEM = "DESELECT ALL";
 const char D_CLONE[] PROGMEM = "CLONE SSID";
 const char D_LED[] PROGMEM = "LED";
+
+// LED THEME
+const char D_LED_THEME[] PROGMEM   = "LED THEME";
+const char D_LED_DEFAULT[] PROGMEM = "Default";
+const char D_LED_RED[] PROGMEM     = "Red";
+const char D_LED_BLUE[] PROGMEM    = "Blue";
+const char D_LED_PURPLE[] PROGMEM  = "Purple";
+const char D_LED_PARTY[] PROGMEM   = "Party";
 
 // BUTTON TEST
 const char D_UP[] PROGMEM = "UP:";
@@ -618,6 +627,7 @@ const char S_JSON_SERIAL_ECHO[] PROGMEM = "serialEcho";
 
 // LED
 const char S_JSON_LEDENABLED[] PROGMEM = "led";
+const char S_JSON_LEDTHEME[] PROGMEM   = "ledtheme";
 
 // Display
 const char S_JSON_DISPLAYINTERFACE[] PROGMEM = "display";

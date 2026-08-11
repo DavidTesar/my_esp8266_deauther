@@ -7,7 +7,9 @@
 #include "EEPROMHelper.h" // To load and save settings_t
 #include "debug.h"
 
-#define MAGIC_NUM 3416245
+// Bumped from 3416245: led_settings_t gained a `theme` field, so any settings
+// saved by an older build must be treated as invalid and reset to defaults.
+#define MAGIC_NUM 3416246
 
 extern bool writeFile(String path, String& buf);
 extern void getRandomMac(uint8_t* mac);
@@ -96,6 +98,7 @@ namespace settings {
 
         // LED
         JSON_FLAG(S_JSON_LEDENABLED, data.led.enabled);
+        JSON_INT(S_JSON_LEDTHEME, data.led.theme);
 
         // Display
         JSON_FLAG(S_JSON_DISPLAYINTERFACE, data.display.enabled);
@@ -177,6 +180,7 @@ namespace settings {
         data.cli.serial_echo = CLI_ECHO;
 
         data.led.enabled = USE_LED;
+        data.led.theme   = LED_THEME;
 
         data.display.enabled = USE_DISPLAY;
         data.display.timeout = DISPLAY_TIMEOUT;

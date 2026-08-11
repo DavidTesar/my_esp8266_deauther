@@ -285,6 +285,7 @@ void CLI::runCommand(String input) {
         prntln(CLI_HELP_SEND_PROBE);
         prntln(CLI_HELP_LED_A);
         prntln(CLI_HELP_LED_B);
+        prntln(CLI_HELP_LED_C);
         prntln(CLI_HELP_DRAW);
         prntln(CLI_HELP_SCREEN_ON);
         prntln(CLI_HELP_SCREEN_MODE);
@@ -725,6 +726,7 @@ void CLI::runCommand(String input) {
 
         // LED
         else if (eqls(str, S_JSON_LEDENABLED)) prntln(settings::getLEDSettings().enabled);
+        else if (eqls(str, S_JSON_LEDTHEME)) prntln(settings::getLEDSettings().theme);
 
         // Display
         else if (eqls(str, S_JSON_DISPLAYINTERFACE)) prntln(settings::getDisplaySettings().enabled);
@@ -1100,6 +1102,24 @@ void CLI::runCommand(String input) {
         strToColor(list->get(1), c);
 
         led::setColor(c[0], c[1], c[2]);
+    }
+
+    // led <default/red/blue/purple/party>
+    else if ((list->size() == 2) && eqlsCMD(0, CLI_LED)) {
+        int theme = led::themeFromName(list->get(1));
+
+        if (theme < 0) {
+            parameterError(list->get(1));
+        } else {
+            led_settings_t ls = settings::getLEDSettings();
+            ls.theme = (led_theme_t)theme;
+            settings::setLEDSettings(ls);
+            led::refresh();
+
+            prnt(S_JSON_LEDTHEME);
+            prnt(" = ");
+            prntln(list->get(1));
+        }
     }
 
     // ===== DELAY ===== //

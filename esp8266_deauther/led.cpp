@@ -21,9 +21,21 @@
 extern Attack attack;
 extern Scan   scan;
 
+// ===== THEME PALETTE ===== //
+#ifndef LED_PARTY_INTERVAL
+  #define LED_PARTY_INTERVAL 250 // ms between party color swaps
+#endif // ifndef LED_PARTY_INTERVAL
+#define LED_THEME_PURPLE_COLOR 160, 0, 255
+#define LED_PARTY_A 0, 180, 255 // light blue
+#define LED_PARTY_B 0, 255, 60  // green
+
 namespace led {
     // ===== PRIVATE ===== //
     LED_MODE mode = OFF;
+
+    // Party-theme animation state
+    uint32_t party_last_swap = 0;
+    bool     party_state     = false;
 
 #if defined(LED_NEOPIXEL_RGB)
     Adafruit_NeoPixel strip { LED_NUM, LED_NEOPIXEL_PIN, NEO_RGB + NEO_KHZ800 };
@@ -78,6 +90,40 @@ namespace led {
 #endif // if defined(LED_DIGITAL)
     }
 
+    // Apply the color for the given mode, honoring the selected theme.
+    // OFF always means truly off, regardless of the theme.
+    void applyTheme(LED_MODE m) {
+        if (m == OFF) {
+            setColor(LED_MODE_OFF);
+            return;
+        }
+
+        switch (settings::getLEDSettings().theme) {
+            case LED_THEME_RED:
+                setColor(255, 0, 0);
+                break;
+            case LED_THEME_BLUE:
+                setColor(0, 0, 255);
+                break;
+            case LED_THEME_PURPLE:
+                setColor(LED_THEME_PURPLE_COLOR);
+                break;
+            case LED_THEME_PARTY:
+                if (party_state) setColor(LED_PARTY_A);
+                else setColor(LED_PARTY_B);
+                break;
+            case LED_THEME_DEFAULT:
+            default:
+                switch (m) {
+                    case SCAN:   setColor(LED_MODE_SCAN);   break;
+                    case ATTACK: setColor(LED_MODE_ATTACK); break;
+                    case IDLE:   setColor(LED_MODE_IDLE);   break;
+                    default:     setColor(LED_MODE_OFF);    break;
+                }
+                break;
+        }
+    }
+
     // ===== PUBLIC ===== //
     void setup() {
         analogWriteRange(0xff);
@@ -110,26 +156,37 @@ namespace led {
         } else {
             setMode(IDLE);
         }
+
+        // Animate the party theme independently of mode changes.
+        if ((settings::getLEDSettings().theme == LED_THEME_PARTY) &&
+            settings::getLEDSettings().enabled && (mode != OFF)) {
+            uint32_t now = millis();
+
+            if (now - party_last_swap >= LED_PARTY_INTERVAL) {
+                party_last_swap = now;
+                party_state     = !party_state;
+                applyTheme(mode);
+            }
+        }
     }
 
     void setMode(LED_MODE new_mode, bool force) {
         if ((new_mode != mode) || force) {
             mode = new_mode;
-
-            switch (mode) {
-                case OFF:
-                    setColor(LED_MODE_OFF);
-                    break;
-                case SCAN:
-                    setColor(LED_MODE_SCAN);
-                    break;
-                case ATTACK:
-                    setColor(LED_MODE_ATTACK);
-                    break;
-                case IDLE:
-                    setColor(LED_MODE_IDLE);
-                    break;
-            }
+            applyTheme(mode);
         }
+    }
+
+    void refresh() {
+        applyTheme(mode);
+    }
+
+    int themeFromName(const String& name) {
+        if (name.equalsIgnoreCase("default")) return LED_THEME_DEFAULT;
+        if (name.equalsIgnoreCase("red")) return LED_THEME_RED;
+        if (name.equalsIgnoreCase("blue")) return LED_THEME_BLUE;
+        if (name.equalsIgnoreCase("purple")) return LED_THEME_PURPLE;
+        if (name.equalsIgnoreCase("party")) return LED_THEME_PARTY;
+        return -1;
     }
 }

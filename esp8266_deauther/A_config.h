@@ -605,6 +605,11 @@
   #define WEB_URL "deauth.me"
 #endif // ifndef WEB_URL
 
+// Default LED theme (see led_theme_t in settings.h). Boards may override.
+#ifndef LED_THEME
+  #define LED_THEME LED_THEME_DEFAULT
+#endif /* ifndef LED_THEME */
+
 // ======== CONSTANTS ========== //
 // Do not change these values unless you know what you're doing!
 #define DEAUTHER_NAME "David's ESP8266 Deauther"

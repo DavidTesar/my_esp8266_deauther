@@ -3,6 +3,7 @@
 #include "DisplayUI.h"
 
 #include "settings.h"
+#include "led.h"
 
 // ===== adjustable ===== //
 void DisplayUI::configInit() {
@@ -87,7 +88,8 @@ void DisplayUI::setup() {
             scan.start(SCAN_MODE_SNIFFER, 0, SCAN_MODE_OFF, 0, false, wifi_channel);
             mode = DISPLAY_MODE::PACKETMONITOR;
         });
-        addMenuNode(&mainMenu, D_CLOCK, &clockMenu); // CLOCK
+        addMenuNode(&mainMenu, D_CLOCK, &clockMenu);        // CLOCK
+        addMenuNode(&mainMenu, D_LED_THEME, &ledThemeMenu); // LED THEME
 
 #ifdef HIGHLIGHT_LED
         addMenuNode(&mainMenu, D_LED, [this]() {     // LED
@@ -95,6 +97,29 @@ void DisplayUI::setup() {
             digitalWrite(HIGHLIGHT_LED, highlightLED);
         });
 #endif // ifdef HIGHLIGHT_LED
+    });
+
+    // LED THEME MENU
+    createMenu(&ledThemeMenu, &mainMenu, [this]() {
+        // Add one selectable entry per theme; the active theme is marked with " <".
+        auto addTheme = [this](const char* label, led_theme_t theme) {
+            addMenuNode(&ledThemeMenu, [label, theme]() {
+                String s = str(label);
+                if (settings::getLEDSettings().theme == theme) s += " <";
+                return s;
+            }, [this, theme]() {
+                led_settings_t ls = settings::getLEDSettings();
+                ls.theme = theme;
+                settings::setLEDSettings(ls);
+                led::refresh();
+            });
+        };
+
+        addTheme(D_LED_DEFAULT, LED_THEME_DEFAULT);
+        addTheme(D_LED_RED, LED_THEME_RED);
+        addTheme(D_LED_BLUE, LED_THEME_BLUE);
+        addTheme(D_LED_PURPLE, LED_THEME_PURPLE);
+        addTheme(D_LED_PARTY, LED_THEME_PARTY);
     });
 
     // SCAN MENU
