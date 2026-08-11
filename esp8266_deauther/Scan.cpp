@@ -377,7 +377,9 @@ bool Scan::isSniffing() {
 }
 
 uint8_t Scan::getPercentage() {
-    if (!isSniffing()) return 0;
+    // sniffTime == 0 means "scan forever" (e.g. `scan wifi -t 0`); there is no
+    // percentage and dividing by (sniffTime / 100) == 0 would be a divide-by-zero.
+    if (!isSniffing() || (sniffTime == 0)) return 0;
 
     return (currentTime - snifferStartTime) / (sniffTime / 100);
 }
@@ -442,7 +444,11 @@ String Scan::getMode() {
 }
 
 double Scan::getScaleFactor(uint8_t height) {
-    return (double)height / (double)getMaxPacket();
+    // guard against an empty packet history (getMaxPacket() == 0) so callers
+    // never get Infinity/NaN out of this
+    uint32_t maxPacket = getMaxPacket();
+
+    return (maxPacket > 0) ? (double)height / (double)maxPacket : 0.0;
 }
 
 uint32_t Scan::getMaxPacket() {
