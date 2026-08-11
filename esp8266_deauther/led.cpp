@@ -60,9 +60,10 @@ namespace led {
             if (LED_PIN_B < 255) digitalWrite(LED_PIN_B, b == 0);
         }
 #elif defined(LED_RGB)
-        if (r > 0) r = r * LED_MODE_BRIGHTNESS / 100;
-        if (g > 0) g = g * LED_MODE_BRIGHTNESS / 100;
-        if (b > 0) b = b * LED_MODE_BRIGHTNESS / 100;
+        uint8_t brightness = settings::getLEDSettings().brightness; // 0-100 %
+        if (r > 0) r = r * brightness / 100;
+        if (g > 0) g = g * brightness / 100;
+        if (b > 0) b = b * brightness / 100;
 
         if (LED_ANODE) {
             r = 255 - r;
@@ -74,6 +75,7 @@ namespace led {
         analogWrite(LED_PIN_G, g);
         analogWrite(LED_PIN_B, b);
 #elif defined(LED_NEOPIXEL) || defined(LED_DOTSTAR)
+        strip.setBrightness(settings::getLEDSettings().brightness * 255 / 100);
 
         for (size_t i = 0; i < strip.numPixels(); i++) {
             strip.setPixelColor(i, r, g, b);
@@ -84,7 +86,7 @@ namespace led {
         myled.setChannel(LED_MY92_CH_R, r);
         myled.setChannel(LED_MY92_CH_G, g);
         myled.setChannel(LED_MY92_CH_B, b);
-        myled.setChannel(LED_MY92_CH_BRIGHTNESS, LED_MODE_BRIGHTNESS);
+        myled.setChannel(LED_MY92_CH_BRIGHTNESS, settings::getLEDSettings().brightness * 255 / 100);
         myled.setState(true);
         myled.update();
 #endif // if defined(LED_DIGITAL)

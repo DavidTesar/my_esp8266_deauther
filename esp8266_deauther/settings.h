@@ -88,6 +88,7 @@ typedef enum led_theme_t {
 typedef struct led_settings_t {
     bool        enabled;
     led_theme_t theme;
+    uint8_t     brightness; // 0-100 %
 } led_settings_t;
 
 // ===== DISPLAY ===== //

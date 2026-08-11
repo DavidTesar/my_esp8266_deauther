@@ -120,6 +120,21 @@ void DisplayUI::setup() {
         addTheme(D_LED_BLUE, LED_THEME_BLUE);
         addTheme(D_LED_PURPLE, LED_THEME_PURPLE);
         addTheme(D_LED_PARTY, LED_THEME_PARTY);
+
+        // Brightness adjuster: click = +20%, hold = -20% (wraps at the ends)
+        addMenuNode(&ledThemeMenu, [this]() {
+            return leftRight(str(D_LED_BRIGHTNESS), String(settings::getLEDSettings().brightness) + '%', maxLen - 1);
+        }, [this]() {
+            led_settings_t ls = settings::getLEDSettings();
+            ls.brightness = (ls.brightness >= 100) ? 0 : ls.brightness + 20;
+            settings::setLEDSettings(ls);
+            led::refresh();
+        }, [this]() {
+            led_settings_t ls = settings::getLEDSettings();
+            ls.brightness = (ls.brightness < 20) ? 100 : ls.brightness - 20;
+            settings::setLEDSettings(ls);
+            led::refresh();
+        });
     });
 
     // SCAN MENU

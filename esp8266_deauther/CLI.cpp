@@ -286,6 +286,7 @@ void CLI::runCommand(String input) {
         prntln(CLI_HELP_LED_A);
         prntln(CLI_HELP_LED_B);
         prntln(CLI_HELP_LED_C);
+        prntln(CLI_HELP_LED_D);
         prntln(CLI_HELP_DRAW);
         prntln(CLI_HELP_SCREEN_ON);
         prntln(CLI_HELP_SCREEN_MODE);
@@ -727,6 +728,7 @@ void CLI::runCommand(String input) {
         // LED
         else if (eqls(str, S_JSON_LEDENABLED)) prntln(settings::getLEDSettings().enabled);
         else if (eqls(str, S_JSON_LEDTHEME)) prntln(settings::getLEDSettings().theme);
+        else if (eqls(str, S_JSON_LEDBRIGHTNESS)) prntln(settings::getLEDSettings().brightness);
 
         // Display
         else if (eqls(str, S_JSON_DISPLAYINTERFACE)) prntln(settings::getDisplaySettings().enabled);
@@ -790,6 +792,8 @@ void CLI::runCommand(String input) {
 
         // LED
         else if (eqls(str, S_JSON_LEDENABLED)) newSettings.led.enabled = boolVal;
+        else if (eqls(str, S_JSON_LEDTHEME)) newSettings.led.theme = (led_theme_t)(unsignedVal > 4 ? 0 : unsignedVal);
+        else if (eqls(str, S_JSON_LEDBRIGHTNESS)) newSettings.led.brightness = (uint8_t)(unsignedVal > 100 ? 100 : unsignedVal);
 
         // Display
         else if (eqls(str, S_JSON_DISPLAYINTERFACE)) newSettings.display.enabled = boolVal;
@@ -1102,6 +1106,23 @@ void CLI::runCommand(String input) {
         strToColor(list->get(1), c);
 
         led::setColor(c[0], c[1], c[2]);
+    }
+
+    // led brightness <0-100>
+    else if ((list->size() == 3) && eqlsCMD(0, CLI_LED) && eqlsCMD(1, CLI_BRIGHTNESS)) {
+        int val = list->get(2).toInt();
+
+        if (val < 0) val = 0;
+        else if (val > 100) val = 100;
+
+        led_settings_t ls = settings::getLEDSettings();
+        ls.brightness = (uint8_t)val;
+        settings::setLEDSettings(ls);
+        led::refresh();
+
+        prnt(S_JSON_LEDBRIGHTNESS);
+        prnt(" = ");
+        prntln(val);
     }
 
     // led <default/red/blue/purple/party>

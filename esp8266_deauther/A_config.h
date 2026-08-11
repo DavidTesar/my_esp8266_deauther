@@ -610,6 +610,11 @@
   #define LED_THEME LED_THEME_DEFAULT
 #endif /* ifndef LED_THEME */
 
+// Default LED brightness as a percentage (0-100). Boards may override.
+#ifndef LED_BRIGHTNESS_DEFAULT
+  #define LED_BRIGHTNESS_DEFAULT 100
+#endif /* ifndef LED_BRIGHTNESS_DEFAULT */
+
 // ======== CONSTANTS ========== //
 // Do not change these values unless you know what you're doing!
 #define DEAUTHER_NAME "David's ESP8266 Deauther"

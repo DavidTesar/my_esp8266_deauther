@@ -204,6 +204,8 @@ const char CLI_HELP_SEND_PROBE[] PROGMEM = "send probe <mac> <ssid> <ch>";
 const char CLI_HELP_LED_A[] PROGMEM = "led <r> <g> <b>";
 const char CLI_HELP_LED_B[] PROGMEM = "led <#rrggbb>";
 const char CLI_HELP_LED_C[] PROGMEM = "led <default/red/blue/purple/party>";
+const char CLI_HELP_LED_D[] PROGMEM = "led brightness <0-100>";
+const char CLI_BRIGHTNESS[] PROGMEM = "brightness";
 const char CLI_HELP_DRAW[] PROGMEM = "draw";
 const char CLI_HELP_SCREEN_ON[] PROGMEM = "screen <on/off>";
 const char CLI_HELP_SCREEN_MODE[] PROGMEM = "screen mode <menu/packetmonitor/buttontest/loading>";
@@ -359,6 +361,7 @@ const char D_LED_RED[] PROGMEM     = "Red";
 const char D_LED_BLUE[] PROGMEM    = "Blue";
 const char D_LED_PURPLE[] PROGMEM  = "Purple";
 const char D_LED_PARTY[] PROGMEM   = "Party";
+const char D_LED_BRIGHTNESS[] PROGMEM = "Brightness";
 
 // BUTTON TEST
 const char D_UP[] PROGMEM = "UP:";
@@ -626,8 +629,9 @@ const char S_JSON_SERIALINTERFACE[] PROGMEM = "serial";
 const char S_JSON_SERIAL_ECHO[] PROGMEM = "serialEcho";
 
 // LED
-const char S_JSON_LEDENABLED[] PROGMEM = "led";
-const char S_JSON_LEDTHEME[] PROGMEM   = "ledtheme";
+const char S_JSON_LEDENABLED[] PROGMEM    = "led";
+const char S_JSON_LEDTHEME[] PROGMEM      = "ledtheme";
+const char S_JSON_LEDBRIGHTNESS[] PROGMEM = "ledbrightness";
 
 // Display
 const char S_JSON_DISPLAYINTERFACE[] PROGMEM = "display";
