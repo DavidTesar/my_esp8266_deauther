@@ -21,7 +21,14 @@ function draw() {
 				+ "</div>"
 				+ "<div class='col-6'>";
 
-			if (typeof settingsJson[key] == "boolean") {
+			if (key == "ledtheme") {
+				var themes = ["Default", "Red", "Blue", "Purple", "Party"];
+				html += "<select name='" + key + "' onchange='save(\"" + key + "\",parseInt(this.value))'>";
+				for (var t = 0; t < themes.length; t++) {
+					html += "<option value='" + t + "'" + (settingsJson[key] == t ? " selected" : "") + ">" + themes[t] + "</option>";
+				}
+				html += "</select>";
+			} else if (typeof settingsJson[key] == "boolean") {
 				html += "<label class='checkBoxContainer'><input type='checkbox' name='" + key + "' " + (settingsJson[key] ? "checked" : "") + " onchange='save(\"" + key + "\",!settingsJson[\"" + key + "\"])'><span class='checkmark'></span></label>";
 			} else if (typeof settingsJson[key] == "number") {
 				html += "<input type='number' name='" + key + "' value=" + settingsJson[key] + " onchange='save(\"" + key + "\",parseInt(this.value))'>";
