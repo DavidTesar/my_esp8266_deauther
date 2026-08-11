@@ -11,7 +11,8 @@
 // is treated as invalid and reset to defaults.
 //   3416245 -> 3416246: led_settings_t gained `theme`
 //   3416246 -> 3416247: led_settings_t gained `brightness`
-#define MAGIC_NUM 3416247
+//   3416247 -> 3416248: attack_settings_t gained auto_cycle/cycle_on/cycle_off
+#define MAGIC_NUM 3416248
 
 extern bool writeFile(String path, String& buf);
 extern void getRandomMac(uint8_t* mac);
@@ -72,6 +73,9 @@ namespace settings {
         JSON_INT(S_JSON_DEAUTHREASON, data.attack.deauth_reason);
         JSON_FLAG(S_JSON_BEACONINTERVAL, data.attack.beacon_interval == INTERVAL_1S);
         JSON_INT(S_JSON_PROBESPERSSID, data.attack.probe_frames_per_ssid);
+        JSON_FLAG(S_JSON_AUTOCYCLE, data.attack.auto_cycle);
+        JSON_INT(S_JSON_CYCLEON, data.attack.cycle_on);
+        JSON_INT(S_JSON_CYCLEOFF, data.attack.cycle_off);
 
         // WiFi
         JSON_INT(S_JSON_CHANNEL, data.wifi.channel);
@@ -159,6 +163,9 @@ namespace settings {
         data.attack.deauth_reason         = DEAUTH_REASON;
         data.attack.beacon_interval       = beacon_interval_t::INTERVAL_100MS;
         data.attack.probe_frames_per_ssid = PROBE_FRAMES_PER_SSID;
+        data.attack.auto_cycle            = ATTACK_AUTO_CYCLE;
+        data.attack.cycle_on              = ATTACK_CYCLE_ON;
+        data.attack.cycle_off             = ATTACK_CYCLE_OFF;
 
         data.wifi.channel = 1;
         getRandomMac(data.wifi.mac_st);

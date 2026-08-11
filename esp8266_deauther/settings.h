@@ -39,6 +39,12 @@ typedef struct attack_settings_t {
 
     // Probe
     uint8_t probe_frames_per_ssid;
+
+    // Auto-cycle: repeatedly run the attack for cycle_on seconds, then pause
+    // for cycle_off seconds, as long as auto_cycle is enabled
+    bool     auto_cycle;
+    uint16_t cycle_on;  // seconds sending
+    uint16_t cycle_off; // seconds paused
 } attack_settings_t;
 
 // ====== WIFI ====== //

@@ -700,6 +700,9 @@ void CLI::runCommand(String input) {
         else if (eqls(str, S_JSON_DEAUTHREASON)) prntln(settings::getAttackSettings().deauth_reason);
         else if (eqls(str, S_JSON_BEACONINTERVAL)) prntln((bool)settings::getAttackSettings().beacon_interval);
         else if (eqls(str, S_JSON_PROBESPERSSID)) prntln(settings::getAttackSettings().probe_frames_per_ssid);
+        else if (eqls(str, S_JSON_AUTOCYCLE)) prntln(settings::getAttackSettings().auto_cycle);
+        else if (eqls(str, S_JSON_CYCLEON)) prntln(settings::getAttackSettings().cycle_on);
+        else if (eqls(str, S_JSON_CYCLEOFF)) prntln(settings::getAttackSettings().cycle_off);
 
         // WiFi
         else if (eqls(str, S_JSON_CHANNEL)) prntln(settings::getWifiSettings().channel);
@@ -765,6 +768,9 @@ void CLI::runCommand(String input) {
         else if (eqls(str, S_JSON_DEAUTHREASON)) newSettings.attack.deauth_reason = unsignedVal;
         else if (eqls(str, S_JSON_BEACONINTERVAL)) newSettings.attack.beacon_interval = (beacon_interval_t)boolVal;
         else if (eqls(str, S_JSON_PROBESPERSSID)) newSettings.attack.probe_frames_per_ssid = unsignedVal;
+        else if (eqls(str, S_JSON_AUTOCYCLE)) newSettings.attack.auto_cycle = boolVal;
+        else if (eqls(str, S_JSON_CYCLEON)) newSettings.attack.cycle_on = (uint16_t)unsignedVal;
+        else if (eqls(str, S_JSON_CYCLEOFF)) newSettings.attack.cycle_off = (uint16_t)unsignedVal;
 
         // WiFi
         else if (eqls(str, S_JSON_CHANNEL)) newSettings.wifi.channel = unsignedVal;

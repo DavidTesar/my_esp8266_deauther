@@ -111,6 +111,11 @@ class Attack {
         uint32_t attackStartTime = 0;
         uint32_t timeout         = 0;
 
+        // Auto-cycle state (see settings.attack.auto_cycle)
+        bool     cycleActive   = false; // this run is auto-cycling
+        bool     cyclePaused   = false; // currently in the "off" (paused) phase
+        uint32_t cyclePhaseTime = 0;    // when the current on/off phase started
+
         // random mac address for making the beacon packets
         uint8_t mac[6] = { 0xAA, 0xBB, 0xCC, 0x00, 0x11, 0x22 };
 

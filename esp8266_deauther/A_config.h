@@ -425,6 +425,20 @@
   #define PROBE_FRAMES_PER_SSID 1
 #endif /* ifndef PROBE_FRAMES_PER_SSID */
 
+// Attack auto-cycle: off by default; when enabled, run cycle_on seconds then
+// pause cycle_off seconds, repeating.
+#ifndef ATTACK_AUTO_CYCLE
+  #define ATTACK_AUTO_CYCLE false
+#endif /* ifndef ATTACK_AUTO_CYCLE */
+
+#ifndef ATTACK_CYCLE_ON
+  #define ATTACK_CYCLE_ON 30
+#endif /* ifndef ATTACK_CYCLE_ON */
+
+#ifndef ATTACK_CYCLE_OFF
+  #define ATTACK_CYCLE_OFF 30
+#endif /* ifndef ATTACK_CYCLE_OFF */
+
 // ===== SNIFFER ===== //
 #ifndef CH_TIME
   #define CH_TIME 200

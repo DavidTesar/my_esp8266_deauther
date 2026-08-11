@@ -456,6 +456,8 @@ const char A_START[] PROGMEM = "Start attacking";
 const char A_NO_MODE_ERROR[] PROGMEM = "WARNING: No valid attack mode set";
 const char A_STOP[] PROGMEM = "Stopped attacking";
 const char A_TIMEOUT[] PROGMEM = "Timeout - ";
+const char A_CYCLE_PAUSE[] PROGMEM = "Auto-cycle: pausing attack";
+const char A_CYCLE_RESUME[] PROGMEM = "Auto-cycle: resuming attack";
 const char A_STATUS[] PROGMEM = "[Pkt/s] All: %+4u | Deauths: %+3u/%-3u | Beacons: %+3u/%-3u | Probes: %+3u/%-3u\r\n";
 const char A_ENABLED_OUTPUT[] PROGMEM = "Enabled attack output";
 const char A_DISABLED_OUTPUT[] PROGMEM = "Disabled attack output";
@@ -605,6 +607,9 @@ const char S_JSON_DEAUTHSPERTARGET[] PROGMEM = "deauthspertarget";
 const char S_JSON_DEAUTHREASON[] PROGMEM = "deauthReason";
 const char S_JSON_BEACONINTERVAL[] PROGMEM = "beaconInterval";
 const char S_JSON_PROBESPERSSID[] PROGMEM = "probesPerSSID";
+const char S_JSON_AUTOCYCLE[] PROGMEM = "autocycle";
+const char S_JSON_CYCLEON[] PROGMEM = "cycleon";
+const char S_JSON_CYCLEOFF[] PROGMEM = "cycleoff";
 
 // WiFi
 const char S_JSON_CHANNEL[] PROGMEM = "channel";

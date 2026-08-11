@@ -30,6 +30,11 @@ void Attack::start() {
     accesspoints.sortAfterChannel();
     stations.sortAfterChannel();
     running = true;
+
+    // arm auto-cycle for this run based on current settings
+    cycleActive    = settings::getAttackSettings().auto_cycle;
+    cyclePaused    = false;
+    cyclePhaseTime = currentTime;
 }
 
 void Attack::start(bool beacon, bool deauth, bool deauthAll, bool probe, bool output, uint32_t timeout) {
@@ -72,6 +77,8 @@ void Attack::stop() {
         deauth.active        = false;
         beacon.active        = false;
         probe.active         = false;
+        cycleActive          = false;
+        cyclePaused          = false;
         prntln(A_STOP);
     }
 }
@@ -156,15 +163,33 @@ String Attack::getStatusJSON() {
 void Attack::update() {
     if (!running || scan.isScanning()) return;
 
+    // auto-cycle: flip between an "on" (sending) and "off" (paused) phase
+    if (cycleActive) {
+        uint32_t onMs  = (uint32_t)settings::getAttackSettings().cycle_on * 1000;
+        uint32_t offMs = (uint32_t)settings::getAttackSettings().cycle_off * 1000;
+
+        if (!cyclePaused && (onMs > 0) && (currentTime - cyclePhaseTime >= onMs)) {
+            cyclePaused    = true;
+            cyclePhaseTime = currentTime;
+            if (output) prntln(A_CYCLE_PAUSE);
+        } else if (cyclePaused && (offMs > 0) && (currentTime - cyclePhaseTime >= offMs)) {
+            cyclePaused    = false;
+            cyclePhaseTime = currentTime;
+            if (output) prntln(A_CYCLE_RESUME);
+        }
+    }
+
     apCount = accesspoints.count();
     stCount = stations.count();
     nCount  = names.count();
 
-    // run/update all attacks
-    deauthUpdate();
-    deauthAllUpdate();
-    beaconUpdate();
-    probeUpdate();
+    // run/update all attacks (skipped while paused by auto-cycle)
+    if (!cyclePaused) {
+        deauthUpdate();
+        deauthAllUpdate();
+        beaconUpdate();
+        probeUpdate();
+    }
 
     // each second
     if (currentTime - attackTime > 1000) {
