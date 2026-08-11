@@ -164,7 +164,8 @@ void SimpleList<T>::add(int index, T obj) {
     newNode->data = obj;
 
     if (index == 0) {
-        listBegin = newNode;
+        newNode->next = listBegin; // preserve the rest of the list (was leaked)
+        listBegin     = newNode;
     } else {
         SimpleListNode<T>* nodePrev = getNode(index - 1);
         newNode->next  = nodePrev->next;
@@ -358,7 +359,9 @@ template<typename T>
 void SimpleList<T>::moveToEnd() {
     SimpleListNode<T>* h = listBegin;
 
-    if (!h) return;
+    // empty, or a single element (listBegin == listEnd): nothing to move, and
+    // proceeding would set listBegin to NULL while the node still lives at listEnd
+    if (!h || (h == listEnd)) return;
 
     listBegin     = listBegin->next;
     listEnd->next = h;
@@ -377,36 +380,34 @@ template<typename T>
 int SimpleList<T>::search(T obj) {
     if (compare == NULL) return -1;
 
-    int i = 0;
+    // Loop bounded by listSize so getNode() is never called with an
+    // out-of-range index (which returns NULL and would be dereferenced).
+    for (int i = 0; i < listSize; i++) {
+        SimpleListNode<T>* hNode = getNode(i);
 
-    SimpleListNode<T>* hNode = getNode(i);
-    bool found               = compare(obj, hNode->data) == 0;
-
-    while (!found && i < listSize) {
-        i++;
-        hNode = getNode(i);
-        found = compare(obj, hNode->data) == 0;
+        if (hNode && (compare(obj, hNode->data) == 0)) return i;
     }
 
-    return found ? i : -1;
+    return -1;
 }
 
 template<typename T>
 int SimpleList<T>::searchNext(T obj) {
     if (compare == NULL) return -1;
 
-    int i = lastIndexGot;
+    // No cached node to continue from -> search from the start.
+    if ((lastIndexGot < 0) || (lastNodeGot == NULL)) return search(obj);
 
+    int i                    = lastIndexGot;
     SimpleListNode<T>* hNode = lastNodeGot;
-    bool found               = compare(obj, hNode->data) == 0;
 
-    while (!found && i < listSize) {
+    while ((i < listSize) && (hNode != NULL)) {
+        if (compare(obj, hNode->data) == 0) return i;
         i++;
         hNode = getNode(i);
-        found = compare(obj, hNode->data) == 0;
     }
 
-    return found ? i : -1;
+    return -1;
 }
 
 template<typename T>

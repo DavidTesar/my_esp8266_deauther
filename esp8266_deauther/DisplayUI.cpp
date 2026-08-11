@@ -285,7 +285,10 @@ void DisplayUI::setup() {
             }, [this, i]() {
                 ssids.remove(i);
                 changeMenu(&ssidListMenu);
-                ssidListMenu.selected = i;
+                // ssid rows are preceded by BACK + CLONE_APS + RANDOM_MODE, so
+                // the menu index of ssid `i` is i + 3, not the raw ssid index i
+                const int ssidRowOffset = 3;
+                ssidListMenu.selected = i + ssidRowOffset;
             });
         }
 
