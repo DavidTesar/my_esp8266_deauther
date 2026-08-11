@@ -436,11 +436,11 @@
 
 // ===== ACCESS POINT ===== //
 #ifndef AP_SSID
-  #define AP_SSID "pwned"
+  #define AP_SSID "david"
 #endif /* ifndef AP_SSID */
 
 #ifndef AP_PASSWD
-  #define AP_PASSWD "deauther"
+  #define AP_PASSWD "david123"
 #endif /* ifndef AP_PASSWD */
 
 #ifndef AP_HIDDEN
@@ -607,10 +607,11 @@
 
 // ======== CONSTANTS ========== //
 // Do not change these values unless you know what you're doing!
-#define DEAUTHER_VERSION "2.6.1"
-#define DEAUTHER_VERSION_MAJOR 2
-#define DEAUTHER_VERSION_MINOR 6
-#define DEAUTHER_VERSION_REVISION 1
+#define DEAUTHER_NAME "David's ESP8266 Deauther"
+#define DEAUTHER_VERSION "3.0.0-dt"
+#define DEAUTHER_VERSION_MAJOR 3
+#define DEAUTHER_VERSION_MINOR 0
+#define DEAUTHER_VERSION_REVISION 0
 
 #define EEPROM_SIZE 4095
 #define BOOT_COUNTER_ADDR 1
@@ -634,8 +635,8 @@
  #define MIN_DEAUTH_FRAMES 3
 
    // ===== ACCESS POINT ===== //
- #define AP_SSID "pwned"
- #define AP_PASSWD "deauther"
+ #define AP_SSID "david"
+ #define AP_PASSWD "david123"
  #define AP_HIDDEN false
  #define AP_IP_ADDR {192, 168, 4, 1}
 

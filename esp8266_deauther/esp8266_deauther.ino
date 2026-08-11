@@ -140,7 +140,8 @@ void setup() {
     // STARTED
     prntln(SETUP_STARTED);
 
-    // version
+    // project name + version
+    prntln(DEAUTHER_NAME);
     prntln(DEAUTHER_VERSION);
 
     // setup LED
