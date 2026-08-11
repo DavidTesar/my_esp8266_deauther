@@ -17,6 +17,8 @@
   - [`webInterface`](#web-interface)
   - [`webSpiffs`](#web-spiffs)
   - [`ledEnabled`](#ledEnabled)
+  - [`ledtheme`](#ledtheme)
+  - [`ledbrightness`](#ledbrightness)
   - [`maxCh`](#max-ch)
   - [`macAP`](#macap)
   - [`macSt`](#macst)
@@ -29,6 +31,11 @@
   - [`beaconInterval`](#beacon-interval)
   - [`randomTx`](#randomtx)
   - [`probesPerSSID`](#probesperssid)
+  - [`autocycle`](#autocycle)
+  - [`cycleon`](#cycleon)
+  - [`cycleoff`](#cycleoff)
+  - [`randomcount`](#randomcount)
+  - [`randomlength`](#randomlength)
   
 ## VERSION
 `String version = VERSION;`  
@@ -100,6 +107,17 @@ Can lead to longer loading times but it nice if you need to edit the web files r
 `bool ledEnabled = true`  
 Enables the (RGB) LED feature.  
 
+## LEDTHEME
+`uint8_t ledtheme = 0;`  
+LED color theme: `0` = default (state colors: blue = scan, red = attack, green = idle),
+`1` = red, `2` = blue, `3` = purple, `4` = party (animated light-blue/green).  
+Can also be set by name with `led <default/red/blue/purple/party>`.  
+
+## LEDBRIGHTNESS
+`uint8_t ledbrightness = 100;`  
+LED brightness as a percentage (0–100). Applies to RGB, NeoPixel/DotStar and MY92xx LEDs.
+Can also be set with `led brightness <0-100>`.  
+
 ## MAX-CH
 `uint8_t maxCh = 13;`  
 Max channel to scan on.  
@@ -156,3 +174,24 @@ Enables randomized transmission power for sending out beacon and probe request f
 ## PROBESPERSSID
 `uint8_t probesPerSSID = 1`  
 How many probe request frames are sent for each SSID.     
+
+## AUTOCYCLE
+`bool autocycle = false;`  
+When enabled, a running attack alternates between an active phase and a paused phase
+instead of running continuously — useful for unattended testing. See `cycleon`/`cycleoff`.  
+
+## CYCLEON
+`uint16_t cycleon = 30;`  
+Seconds the attack actively sends packets during each auto-cycle period (only used when `autocycle` is enabled).  
+
+## CYCLEOFF
+`uint16_t cycleoff = 30;`  
+Seconds the attack pauses (stays armed but sends nothing) during each auto-cycle period (only used when `autocycle` is enabled).  
+
+## RANDOMCOUNT
+`uint8_t randomcount = 60;`  
+How many random SSIDs are generated in the random beacon mode (1–60).  
+
+## RANDOMLENGTH
+`uint8_t randomlength = 32;`  
+Length in characters of each generated random SSID (1–32).  

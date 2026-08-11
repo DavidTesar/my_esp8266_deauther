@@ -45,6 +45,8 @@
 - [`led <r> <g> <b> [<brightness>]`](#led)
 - [`led <#rrggbb> [<brightness>]`](#led)
 - [`led <default/red/blue/purple/party>`](#led)
+- [`led brightness <0-100>`](#led)
+- [`channels`](#channels)
 - [`draw`](#draw)
 - [`startap`](#startap)
 - [`stopap`](#startap)
@@ -305,6 +307,16 @@ Selects an LED theme. The choice is saved to settings and persists across reboot
 * `party` – animated, alternating light‑blue and green  
 
 The current theme is also shown in `get ledtheme` and in the settings output (`ledtheme`, `0`–`4`).  
+
+`led brightness <0-100>`  
+Sets the LED brightness as a percentage. Saved to settings and persists across reboots.  
+Also available as `get ledbrightness` / `set ledbrightness <0-100>`.  
+
+## CHANNELS
+`channels`  
+Prints the number of packets seen on each channel (1–14) since the current sniff/packet-monitor
+started, followed by the total and the busiest channel. This is the serial equivalent of the
+per-channel activity view in the packet monitor (hold button A on the display to toggle to it).  
 
 ## DELAY
 `delay <time>`  
