@@ -264,6 +264,7 @@ void CLI::runCommand(String input) {
         prntln(CLI_HELP_ATTACK_STATUS);
         prntln(CLI_HELP_STOP);
         prntln(CLI_HELP_SYSINFO);
+        prntln(CLI_HELP_CHANNELS);
         prntln(CLI_HELP_CLEAR);
         prntln(CLI_HELP_FORMAT);
         prntln(CLI_HELP_PRINT);
@@ -879,6 +880,23 @@ void CLI::runCommand(String input) {
         }
         wifi::printStatus();
         prntln(CLI_SYSTEM_FOOTER);
+    }
+
+    // ===== CHANNELS ===== //
+    // channels - print per-channel packet activity gathered by the sniffer
+    else if (eqlsCMD(0, CLI_CHANNELS)) {
+        prntln(CLI_CHANNELS_HEADER);
+
+        char s[32];
+
+        for (uint8_t ch = 1; ch <= 14; ch++) {
+            sprintf(s, "  ch %2u: %lu", ch, (unsigned long)scan.getChannelPackets(ch));
+            prntln(String(s));
+        }
+
+        sprintf(s, "total: %lu | busiest: ch %u",
+                (unsigned long)scan.getTotalPackets(), scan.getBusiestChannel());
+        prntln(String(s));
     }
 
     // ===== RESET ===== //
