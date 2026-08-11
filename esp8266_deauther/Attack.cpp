@@ -97,10 +97,17 @@ void Attack::updateCounter() {
 
     // deauth packets per second
     if (deauth.active) {
-        if (deauthAll) deauth.maxPkts = settings::getAttackSettings().deauths_per_target *
-                                        (accesspoints.count() + stations.count() * 2 - names.selected());
-        else deauth.maxPkts = settings::getAttackSettings().deauths_per_target *
-                              (accesspoints.selected() + stations.selected() * 2 + names.selected() + names.stations());
+        if (deauthAll) {
+            // clamp to >= 0: names.selected() can exceed the live AP/station count
+            // (named devices persist independently of the current scan), and a
+            // negative product would wrap the uint16_t maxPkts to a huge value,
+            // defeating the rate limit
+            int targets = accesspoints.count() + stations.count() * 2 - names.selected();
+            deauth.maxPkts = (targets > 0) ? settings::getAttackSettings().deauths_per_target * targets : 0;
+        } else {
+            deauth.maxPkts = settings::getAttackSettings().deauths_per_target *
+                             (accesspoints.selected() + stations.selected() * 2 + names.selected() + names.stations());
+        }
     } else {
         deauth.maxPkts = 0;
     }
@@ -428,7 +435,6 @@ bool Attack::sendProbe(uint8_t tc) {
 }
 
 bool Attack::sendProbe(uint8_t* mac, const char* ssid, uint8_t ch) {
-    packetSize = sizeof(probePacket);
     int ssidLen = strlen(ssid);
 
     if (ssidLen > 32) ssidLen = 32;
@@ -436,13 +442,27 @@ bool Attack::sendProbe(uint8_t* mac, const char* ssid, uint8_t ch) {
     memcpy(&probePacket[10], mac, 6);
     memcpy(&probePacket[26], ssid, ssidLen);
 
-    if (sendPacket(probePacket, packetSize, ch, false)) {
+    // Build a correctly-sized packet so a shorter SSID doesn't announce a
+    // fixed 32-byte field padded with leftover bytes from the previous probe.
+    // Layout: [0-25] header + SSID tag, [26..] SSID, then the supported-rates
+    // tag (probePacket[58..67]). Mirrors sendBeacon().
+    uint16_t tmpPacketSize = (sizeof(probePacket) - 32) + ssidLen;
+    uint8_t* tmpPacket     = new uint8_t[tmpPacketSize];
+
+    memcpy(&tmpPacket[0], &probePacket[0], 26 + ssidLen); // header + SSID tag + SSID
+    tmpPacket[25] = ssidLen;                              // update SSID length byte
+    memcpy(&tmpPacket[26 + ssidLen], &probePacket[58], 10); // supported-rates tag
+
+    bool success = sendPacket(tmpPacket, tmpPacketSize, ch, false);
+
+    if (success) {
         probe.time = currentTime;
         probe.packetCounter++;
-        return true;
     }
 
-    return false;
+    delete[] tmpPacket;
+
+    return success;
 }
 
 bool Attack::sendPacket(uint8_t* packet, uint16_t packetSize, uint8_t ch, bool force_ch) {

@@ -278,7 +278,9 @@ void Stations::deselect(String ssid) {
 }
 
 void Stations::remove(String ssid) {
-    for (int i = 0; i < list->size(); i++) {
+    // iterate backwards so removing an entry doesn't shift a not-yet-checked
+    // match down into an index we've already passed
+    for (int i = list->size() - 1; i >= 0; i--) {
         if (getAPStr(i).equalsIgnoreCase(ssid)) remove(i);
     }
 }

@@ -922,6 +922,10 @@ void DisplayUI::changeMenu(Menu* menu) {
         if (((menu == &apListMenu) && (accesspoints.count() == 0)) ||
             ((menu == &stationListMenu) && (stations.count() == 0)) ||
             ((menu == &nameListMenu) && (names.count() == 0))) {
+            // The target list is empty (e.g. the last item was just removed from
+            // its detail menu). Don't open it, but don't leave the user stuck in
+            // the now-stale detail menu either: fall back to its parent.
+            if (menu->parentMenu) changeMenu(menu->parentMenu);
             return;
         }
 
