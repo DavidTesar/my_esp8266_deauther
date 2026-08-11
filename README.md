@@ -1,8 +1,26 @@
-# ESP8266 Deauther
+# David's ESP8266 Deauther
 
 <img src='https://deauther.com/img/logo.png' alt='Deauther Logo' width='200' />
 
 **Scan for WiFi devices, block selected connections, create dozens of networks and confuse WiFi scanners.**
+
+> A personal fork of [SpacehuhnTech/esp8266_deauther](https://github.com/SpacehuhnTech/esp8266_deauther) (v2), for testing my own networks.
+
+## ⭐ Changes in this fork
+
+Everything below is on top of the upstream v2 (`2.6.1`) firmware:
+
+* **Rebranded** to *David's ESP8266 Deauther*, version **`3.0.0-dt`** (shown on the boot banner and in the web interface).
+* **Selectable LED themes** — a new, persisted setting with 5 options:
+  * `default` – original state colors (blue = scan, red = attack, green = idle)
+  * `red`, `blue`, `purple` – a solid color for all active states
+  * `party` – animated, alternating light-blue and green
+  * Switch it from the **serial CLI** (`led party`, `led default`, …) or on-device via **Main Menu → LED THEME** on boards with an OLED. The choice survives reboots.
+* **Custom default access point** — SSID `david`, password `david123`.
+* **Fixed the web asset converter** (`utils/web_converter`) so it runs without the abandoned `anglerfish` dependency.
+* **Added `build.sh`** — a one-command `arduino-cli` build/flash/monitor helper.
+
+See [`serialcommands.md`](serialcommands.md) for the full command reference.
 
 ## New Documentation
 
@@ -18,7 +36,8 @@ Here are some quick links:
 
 ## Password
 
-The password for `pwned` is `deauther`
+This fork's default access point is `david` with the password `david123`.
+(Upstream defaults were `pwned` / `deauther`.)
 
 ## About this Project
 

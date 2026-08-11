@@ -44,6 +44,7 @@
 - [`send probe <mac> <ssid> <ch>`](#send)
 - [`led <r> <g> <b> [<brightness>]`](#led)
 - [`led <#rrggbb> [<brightness>]`](#led)
+- [`led <default/red/blue/purple/party>`](#led)
 - [`draw`](#draw)
 - [`startap`](#startap)
 - [`stopap`](#startap)
@@ -296,6 +297,14 @@ Be sure to disable the LED updates (see command below), if you don't want the co
 `led <#rrggbb>`  
 Changes LED color based on input in form of a hex value.  
 The value **must** start with a `#` and have 6 following characters.  
+
+`led <default/red/blue/purple/party>`  
+Selects an LED theme. The choice is saved to settings and persists across reboots.  
+* `default` – state colors (blue = scan, red = attack, green = idle)  
+* `red`, `blue`, `purple` – a solid color for all active states  
+* `party` – animated, alternating light‑blue and green  
+
+The current theme is also shown in `get ledtheme` and in the settings output (`ledtheme`, `0`–`4`).  
 
 ## DELAY
 `delay <time>`  

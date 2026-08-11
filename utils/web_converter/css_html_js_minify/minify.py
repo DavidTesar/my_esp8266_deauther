@@ -27,10 +27,31 @@ from .css_minifier import css_minify
 from .html_minifier import html_minify
 from .js_minifier import js_minify
 
-from anglerfish import (check_encoding, check_folder, make_logger,
-                        make_post_exec_msg, set_process_name,
-                        set_single_instance, walk2list, beep,
-                        set_terminal_title)
+# anglerfish is an old, optional dependency only used by the standalone CLI
+# (main()) and the file-watch loop, neither of which the deauther webConverter
+# uses. Fall back to no-op stubs so single-file minification works without it.
+try:
+    from anglerfish import (check_encoding, check_folder, make_logger,
+                            make_post_exec_msg, set_process_name,
+                            set_single_instance, walk2list, beep,
+                            set_terminal_title)
+except ModuleNotFoundError:
+    import logging as _logging
+
+    def _noop(*args, **kwargs):
+        return None
+
+    check_encoding = _noop
+    check_folder = _noop
+    make_post_exec_msg = _noop
+    set_process_name = _noop
+    set_single_instance = _noop
+    walk2list = _noop
+    beep = _noop
+    set_terminal_title = _noop
+
+    def make_logger(name=__name__, emoji=False):
+        return _logging.getLogger(name)
 
 
 __version__ = '2.5.0'
